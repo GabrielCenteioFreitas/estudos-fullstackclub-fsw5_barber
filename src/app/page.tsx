@@ -12,6 +12,11 @@ import Image from "next/image"
 
 export default async function Home() {
   const barbershops = await db.barbershop.findMany({})
+  const popularBarbershops = await db.barbershop.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  })
 
   return (
     <div>
@@ -79,6 +84,28 @@ export default async function Home() {
             ))}
           </div>
         </div>
+
+        <div className="space-y-3">
+          <h2 className="text-xs font-bold uppercase text-gray-400">
+            Populares
+          </h2>
+
+          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {popularBarbershops.map((barbershop) => (
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            ))}
+          </div>
+        </div>
+
+        <footer>
+          <Card>
+            <CardContent className="px-5 py-6">
+              <p className="text-sm text-gray-400">
+                © 2023 Copyright <span className="font-bold">FSW Barber</span>
+              </p>
+            </CardContent>
+          </Card>
+        </footer>
       </div>
     </div>
   )
