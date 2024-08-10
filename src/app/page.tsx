@@ -1,14 +1,18 @@
+import { BarbershopItem } from "@/components/barbershop-item"
 import { Header } from "@/components/header"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { db } from "@/lib/prisma"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import { SearchIcon } from "lucide-react"
 import Image from "next/image"
 
-export default function Home() {
+export default async function Home() {
+  const barbershops = await db.barbershop.findMany({})
+
   return (
     <div>
       <Header />
@@ -62,6 +66,18 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-xs font-bold uppercase text-gray-400">
+            Recomendados
+          </h2>
+
+          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {barbershops.map((barbershop) => (
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
