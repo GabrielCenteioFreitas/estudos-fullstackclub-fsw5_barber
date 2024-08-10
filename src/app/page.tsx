@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { quickSearchoptions } from "@/constants/quick-search-options"
 import { db } from "@/lib/prisma"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import { SearchIcon } from "lucide-react"
@@ -32,6 +33,20 @@ export default async function Home() {
           <Button>
             <SearchIcon />
           </Button>
+        </div>
+
+        <div className="flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchoptions.map((option) => (
+            <Button className="gap-2" variant="secondary" key={option.title}>
+              <Image
+                src={option.imageUrl}
+                width={16}
+                height={16}
+                alt={option.title}
+              />
+              Cabelo
+            </Button>
+          ))}
         </div>
 
         <div className="relative h-[150px] w-full">
