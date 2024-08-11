@@ -1,6 +1,7 @@
 import { BarbershopItem } from "@/components/barbershop-item"
 import { BookingItem } from "@/components/booking-item"
 import { Header } from "@/components/header"
+import { Search } from "@/components/search"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -25,13 +26,7 @@ export default async function Home() {
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
         <p>Segunda-feira, 05 de agosto</p>
 
-        <div className="flex items-center gap-2">
-          <Input placeholder="Faça sua busca..." />
-
-          <Button>
-            <SearchIcon />
-          </Button>
-        </div>
+        <Search />
 
         <div className="flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchoptions.map((option) => (
