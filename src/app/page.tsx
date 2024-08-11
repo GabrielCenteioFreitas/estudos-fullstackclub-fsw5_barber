@@ -42,7 +42,7 @@ export default async function Home() {
                 height={16}
                 alt={option.title}
               />
-              Cabelo
+              {option.title}
             </Button>
           ))}
         </div>
