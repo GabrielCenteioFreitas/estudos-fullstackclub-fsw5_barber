@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { quickSearchoptions } from "@/constants/quick-search-options"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/prisma"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
 import { getServerSession } from "next-auth"
 import Image from "next/image"
 import Link from "next/link"
@@ -46,8 +48,15 @@ export default async function Home() {
       <Header />
 
       <div className="space-y-6 p-5">
-        <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>Segunda-feira, 05 de agosto</p>
+        <h2 className="text-xl font-bold">
+          Olá, {session?.user ? session.user.name : "bem-vindo"}!
+        </h2>
+        <p>
+          <span className="capitalize">
+            {format(new Date(), "EEEE, dd", { locale: ptBR })}
+          </span>{" "}
+          de {format(new Date(), "MMMM", { locale: ptBR })}
+        </p>
 
         <Search />
 
