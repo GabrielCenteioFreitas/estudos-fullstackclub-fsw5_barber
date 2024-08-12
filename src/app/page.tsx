@@ -3,11 +3,10 @@ import { BookingItem } from "@/components/booking-item"
 import { Header } from "@/components/header"
 import { Search } from "@/components/search"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { quickSearchoptions } from "@/constants/quick-search-options"
+import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/prisma"
-import { SearchIcon } from "lucide-react"
+import { getServerSession } from "next-auth"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -19,6 +18,29 @@ export default async function Home() {
     },
   })
 
+  const session = await getServerSession(authOptions)
+
+  const confirmedBookings = session?.user
+    ? await db.booking.findMany({
+        where: {
+          userId: (session.user as any).id,
+          date: {
+            gte: new Date(),
+          },
+        },
+        include: {
+          service: {
+            include: {
+              barbershop: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "asc",
+        },
+      })
+    : []
+
   return (
     <div>
       <Header />
@@ -29,7 +51,7 @@ export default async function Home() {
 
         <Search />
 
-        <div className="flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
           {quickSearchoptions.map((option) => (
             <Button
               className="gap-2"
@@ -59,14 +81,24 @@ export default async function Home() {
           />
         </div>
 
-        <BookingItem />
+        <div className="space-y-3">
+          <h2 className="text-xs font-bold uppercase text-gray-400">
+            Agendamentos
+          </h2>
+
+          <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+            {confirmedBookings.map((booking) => (
+              <BookingItem key={booking.id} booking={booking} />
+            ))}
+          </div>
+        </div>
 
         <div className="space-y-3">
           <h2 className="text-xs font-bold uppercase text-gray-400">
             Recomendados
           </h2>
 
-          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          <div className="flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
             {barbershops.map((barbershop) => (
               <BarbershopItem key={barbershop.id} barbershop={barbershop} />
             ))}
