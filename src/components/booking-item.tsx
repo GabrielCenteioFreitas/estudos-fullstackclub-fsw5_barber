@@ -32,6 +32,7 @@ import { AlertDialogCancel } from "@radix-ui/react-alert-dialog"
 import { toast } from "sonner"
 import { useState } from "react"
 import { deleteBooking } from "@/actions/delete-booking"
+import { BookingSummary } from "./booking-summary"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -140,42 +141,13 @@ export const BookingItem = ({ booking }: BookingItemProps) => {
             {isConfirmed ? "Confirmado" : "Finalizado"}
           </Badge>
 
-          <Card className="mb-6 mt-3">
-            <CardContent className="space-y-3 p-3">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold">{booking.service.name}</h2>
-
-                <p className="text-sm font-bold">
-                  {Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }).format(Number(booking.service.price))}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <h2 className="text-gray-400">Data</h2>
-
-                <p>
-                  {format(booking.date, "d 'de' MMMM", {
-                    locale: ptBR,
-                  })}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <h2 className="text-gray-400">Horário</h2>
-
-                <p>{format(booking.date, "HH:mm", { locale: ptBR })}</p>
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <h2 className="text-gray-400">Barbearia</h2>
-
-                <p>{barbershop.name}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-6 mt-3">
+            <BookingSummary
+              barbershop={barbershop}
+              service={booking.service}
+              selectedDate={booking.date}
+            />
+          </div>
 
           {barbershop.phones.length > 0 && (
             <div className="space-y-3">
