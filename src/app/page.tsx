@@ -4,6 +4,7 @@ import { Header } from "@/components/header"
 import { Search } from "@/components/search"
 import { Button } from "@/components/ui/button"
 import { quickSearchoptions } from "@/constants/quick-search-options"
+import { getConfirmedBookings } from "@/data/get-confirmed-bookings"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/prisma"
 import { format } from "date-fns"
@@ -22,26 +23,7 @@ export default async function Home() {
 
   const session = await getServerSession(authOptions)
 
-  const confirmedBookings = session?.user
-    ? await db.booking.findMany({
-        where: {
-          userId: (session.user as any).id,
-          date: {
-            gte: new Date(),
-          },
-        },
-        include: {
-          service: {
-            include: {
-              barbershop: true,
-            },
-          },
-        },
-        orderBy: {
-          date: "asc",
-        },
-      })
-    : []
+  const confirmedBookings = await getConfirmedBookings()
 
   return (
     <div>
